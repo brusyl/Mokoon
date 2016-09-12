@@ -1,0 +1,17 @@
+cd /home/brunon/Documents/Sylvain/Projet_jeu/Moon_Game/moon/moonThreeJS
+echo "{}" > package.json 
+
+// Install grunt
+npm install grunt --save-dev
+
+// Pour faire fonctionner grunt
+sudo apt-get install nodejs-legacy
+
+// Executer grunt
+grunt
+
+// Version grunt
+grunt --version
+
+// Recuperer les dépendances
+npm install
