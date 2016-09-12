@@ -74,23 +74,21 @@
         return gPosition;
     };
     
-    Grid.prototype.getNeighbours = function(tile) {
+    Grid.prototype.getNeighbours = function(tile, options) {
         var position = tile.getGridPosition(),
             row = position.row,
             column = position.column,
             neighbours = [],
-            testNeighbours = [
-                new MOON.GridPosition(row - 1, column - 1),
-                new MOON.GridPosition(row - 1, column),
-                new MOON.GridPosition(row - 1, column + 1),
-                new MOON.GridPosition(row, column - 1),
-                new MOON.GridPosition(row, column + 1),
-                new MOON.GridPosition(row + 1, column - 1),
-                new MOON.GridPosition(row + 1, column),
-                new MOON.GridPosition(row + 1, column + 1),
-            ];
+            neighbourPositions = [];
         
-        testNeighbours.forEach(function(neighbourPosition) {
+        if (options) {
+            var thickness = options.thickness ? options.thickness : 0;
+            var distance = options.distance ? options.distance : 1;
+            
+            neighbourPositions = this.generateNeighbourPositions(distance, thickness);
+        }
+  
+        neighbourPositions.forEach(function(neighbourPosition) {
             var neighbourTile = this.getTile(neighbourPosition);
             if (neighbourTile) {
                 neighbours.push(neighbourTile);
@@ -101,6 +99,32 @@
         MOON.Debug.log("neighbours " + position.toString());
         MOON.Debug.log("neighbours " + neighbours.length);
         return neighbours;
+    };
+    
+    Grid.prototype.generateNeighbourPositions = function(distance, thickness) {
+        var nPositions = [],
+            width = thickness;
+        
+        if (width > 0) {
+            width = distance - thickness;
+        }
+        
+        if (width <= 0) {
+            width = distance;
+        }
+        
+        while (width < distance) {
+            for (var column = -distance; column <= distance; column++) {
+                for (var row = -distance; row <= distance; row++) {
+                    if (row !== 0 && column !== 0) {
+                        nPositions.push(new MOON.GridPosition(row, column));
+                    }
+                }
+            }
+            distance --;
+        }
+                
+        return nPositions;
     };
     
     MOON.Grid = Grid;
