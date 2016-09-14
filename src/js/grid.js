@@ -79,14 +79,16 @@
             row = position.row,
             column = position.column,
             neighbours = [],
-            neighbourPositions = [];
+            neighbourPositions = [],
+            minDistance = 1, 
+            maxDistance = 2;
         
         if (options) {
-            var thickness = options.thickness ? options.thickness : 0;
-            var distance = options.distance ? options.distance : 1;
+            minDistance = options.minDistance ? options.minDistance : 0;
+            maxDistance = options.maxDistance ? options.maxDistance : 1;
             
-            neighbourPositions = this.generateNeighbourPositions(distance, thickness);
         }
+        neighbourPositions = this.generateNeighbourPositions(position, maxDistance, minDistance);
   
         neighbourPositions.forEach(function(neighbourPosition) {
             var neighbourTile = this.getTile(neighbourPosition);
@@ -101,29 +103,52 @@
         return neighbours;
     };
     
-    Grid.prototype.generateNeighbourPositions = function(distance, thickness) {
+    Grid.prototype.generateNeighbourPositions = function(originPosition, maxDistance, minDistance) {
         var nPositions = [],
-            width = thickness;
+            thickness = maxDistance - minDistance,
+            oRow = originPosition.row,
+            oColumn = originPosition.column;
         
-        if (width > 0) {
-            width = distance - thickness;
+        if (thickness < 0) {
+            thickness = 1;   
         }
-        
-        if (width <= 0) {
-            width = distance;
-        }
-        
-        while (width < distance) {
-            for (var column = -distance; column <= distance; column++) {
-                for (var row = -distance; row <= distance; row++) {
-                    if (row !== 0 && column !== 0) {
-                        nPositions.push(new MOON.GridPosition(row, column));
+ 
+        //TODO A ameliorer 
+        for (var i = 0; i < thickness; i++) {
+            for (var row = -maxDistance; row <= maxDistance; row++) {
+                if (row === -maxDistance) {
+                    var test = row % 2;
+                    var length = maxDistance;
+                    if (test === 0) {
+                        length -= 1;
+                    }
+                    for (var column = -maxDistance + 1; column <= length; column++) {
+                        nPositions.push(new MOON.GridPosition(row + oRow, column + oColumn));
+                    }
+                } else if (row === maxDistance) {
+                    var test = row % 2;
+                    var length = maxDistance;
+                    if (test === 0) {
+                        length -= 1;
+                    }
+                    for (var column = -maxDistance + 1; column <= length; column++) {
+                        nPositions.push(new MOON.GridPosition(row + oRow, column + oColumn));
+                    }
+                } else {
+                    for (var column = -maxDistance; column <= maxDistance; column++) {
+                        if (column === -maxDistance) {
+                            nPositions.push(new MOON.GridPosition(row + oRow, column + oColumn));
+                        } else if (column === maxDistance) {
+                            nPositions.push(new MOON.GridPosition(row + oRow, column + oColumn));
+                        }
+                        
                     }
                 }
             }
-            distance --;
+            maxDistance--;
         }
-                
+        
+        MOON.Debug.log("Find neighbours " + nPositions.length);
         return nPositions;
     };
     
