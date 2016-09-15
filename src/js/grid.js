@@ -6,15 +6,12 @@
     var Grid = function (scene) {
         this.scene = scene;
         this.tiles = {};
-        //this.gWidth = 50;
-        //this.gHeight = 25;
         this.tilesMesh = null;
     };
     
     Grid.prototype.create = function () {
-        var generator = new MOON.TerrainGenerator(),
-            terrain = generator.getTerrain();
-        
+        var terrain = MOON.HexaMatrix.generate(4);
+    
         terrain.forEach(function(tilePosition) {
             this.addTile({
                 position : tilePosition
@@ -55,7 +52,6 @@
         var gPosition = null,
             tile = this.getTile(pos),
             position = tile.getPosition();
-        //console.log(position);
         return position;
     };
     
@@ -68,26 +64,22 @@
         gPosition = new MOON.GridPosition(Math.trunc(position.x / tWidth), 
                                     Math.trunc(position.z / tHeight));
         
-        /*var test = new Chien();
-       test.parle();  */  
-        //console.log(gPosition);
         return gPosition;
     };
     
     Grid.prototype.getNeighbours = function(tile, options) {
+        if (!options) {
+            options = {};
+        }
+        
         var position = tile.getGridPosition(),
             row = position.row,
             column = position.column,
             neighbours = [],
-            neighbourPositions = [];
-        
-        if (options) {
-            var thickness = options.thickness ? options.thickness : 0;
-            var distance = options.distance ? options.distance : 1;
-            
-            neighbourPositions = this.generateNeighbourPositions(distance, thickness);
-        }
-  
+            maxDistance = options.maxDistance ? options.maxDistance : 1,
+            minDistance = options.minDistance ? options.minDistance : 0,
+            neighbourPositions = this.generateNeighbourPositions(position, maxDistance, minDistance);
+   
         neighbourPositions.forEach(function(neighbourPosition) {
             var neighbourTile = this.getTile(neighbourPosition);
             if (neighbourTile) {
@@ -95,36 +87,24 @@
             }
         }.bind(this));
         
-   
         MOON.Debug.log("neighbours " + position.toString());
         MOON.Debug.log("neighbours " + neighbours.length);
         return neighbours;
     };
     
-    Grid.prototype.generateNeighbourPositions = function(distance, thickness) {
-        var nPositions = [],
-            width = thickness;
+    Grid.prototype.generateNeighbourPositions = function(originPosition, maxDistance, minDistance) {
+        var neighbourMatrix = MOON.HexaMatrix.generate(maxDistance, {
+            excludeCenter : true
+        });
         
-        if (width > 0) {
-            width = distance - thickness;
+        if (minDistance > 0) {
+            var minNeighbourMatrix = MOON.HexaMatrix.generate(minDistance);
+            MOON.HexaMatrix.intersect(neighbourMatrix, minNeighbourMatrix);
         }
         
-        if (width <= 0) {
-            width = distance;
-        }
-        
-        while (width < distance) {
-            for (var column = -distance; column <= distance; column++) {
-                for (var row = -distance; row <= distance; row++) {
-                    if (row !== 0 && column !== 0) {
-                        nPositions.push(new MOON.GridPosition(row, column));
-                    }
-                }
-            }
-            distance --;
-        }
-                
-        return nPositions;
+        MOON.HexaMatrix.shift(originPosition, neighbourMatrix);
+               
+        return neighbourMatrix;
     };
     
     MOON.Grid = Grid;
