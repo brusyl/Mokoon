@@ -62,13 +62,17 @@
             row = this.position.row,
             column = this.position.column;
         
-        if (column % 2 === 0) {
-            this.mesh.position.x = row * width;
+        if (row % 2 !== 0) {
+            this.mesh.position.x = column * width + (width / 2);
         } else {
-            this.mesh.position.x = row * width + (width / 2);
+            this.mesh.position.x = column * width;
         }
-        
-        this.mesh.position.z = column * (height * 0.75);
+
+        this.mesh.position.z = row * height * 0.75;
+
+        MOON.Debug.log("Tile position (ROW : " + this.mesh.position.z +
+                       ", COLUMN : " + this.mesh.position.x + ") " +
+                      this.position.toKey());
     };
     
     Tile.prototype.getCenter = function () {
