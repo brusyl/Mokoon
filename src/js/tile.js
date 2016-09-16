@@ -1,14 +1,25 @@
-/*global MOON*/
-(function () {
-    "use strict";
-    var Tile = function (scene, options) {
+// jshint esversion:6
+/* global MOON, THREE */
+
+/**
+ * Class representing a dot.
+ * @extends Point
+ */
+var Tile = class {
+    /**
+     * Create a dot.
+     * @param {number} x - The x value.
+     * @param {number} y - The y value.
+     * @param {number} width - The width of the dot, in pixels.
+     */
+    constructor(scene, options) {
         this.scene = scene;
         this.mesh = null;
         this.position = options.position;
         this.id = this.position.toKey();
-    };
+    }
 
-    Tile.prototype.create = function () {
+    create() {
         var height = 0,
             geometry = new THREE.CylinderGeometry(1, 1, height, 6),
             material = new THREE.MeshBasicMaterial({
@@ -22,9 +33,9 @@
         cylinder.tile = this;
         
         this.mesh = cylinder;
-    };
+    }
     
-    Tile.prototype.getWidth = function () {
+    getWidth() {
         var vertices = this.mesh.geometry.vertices,
             xMin = 0,
             xMax = 0;
@@ -38,9 +49,9 @@
         });
         
         return xMax - xMin;
-    };
+    }
     
-    Tile.prototype.getHeight = function () {
+    getHeight() {
         var vertices = this.mesh.geometry.vertices,
             zMin = 0,
             zMax = 0;
@@ -54,9 +65,9 @@
         });
         
         return zMax - zMin;
-    };
+    }
     
-    Tile.prototype.movePosition = function () {
+    movePosition() {
         var width = this.getWidth(),
             height = this.getHeight(),
             row = this.position.row,
@@ -73,9 +84,9 @@
         MOON.Debug.log("Tile position (ROW : " + this.mesh.position.z +
                        ", COLUMN : " + this.mesh.position.x + ") " +
                       this.position.toKey());
-    };
+    }
     
-    Tile.prototype.getCenter = function () {
+    getCenter() {
         var geometry = this.mesh.geometry,
             bbox = null;
         
@@ -86,27 +97,25 @@
             x : 0.5 * (bbox.max.x - bbox.min.x),
             y : 0.5 * (bbox.max.z - bbox.min.z)
         };
-    };
+    }
     
-    Tile.prototype.getPosition = function () {
+    getPosition() {
         return this.mesh.position;
-    };
+    }
     
-    Tile.prototype.getGridPosition = function () {
+    getGridPosition() {
         var pos = this.position,
             result = new MOON.GridPosition(pos.row, pos.column, pos.height);
         
         return result;
-    };
+    }
     
-    Tile.prototype.distance = function (targetTile) {
+    distance(targetTile) {
         var pos = this.position,
             result = new MOON.GridPosition(pos.row, pos.column, pos.height);
         
         return result;
-    };
-    
+    }
+};
 
-    
-    MOON.Tile = Tile;
-}());
+MOON.Tile = Tile;

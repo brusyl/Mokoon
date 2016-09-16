@@ -1,15 +1,20 @@
 // jshint esversion:6
 /*global MOON*/
 
-(function () {
-    "use strict";
-    var Grid = function (scene) {
+var Grid = class {
+    /**
+     * Create a dot.
+     * @param {number} x - The x value.
+     * @param {number} y - The y value.
+     * @param {number} width - The width of the dot, in pixels.
+     */
+    constructor(scene) {
         this.scene = scene;
         this.tiles = {};
         this.tilesMesh = null;
-    };
+    }
     
-    Grid.prototype.create = function () {
+    create() {
         var terrain = MOON.HexaMatrix.generate(4);
     
         terrain.forEach(function(tilePosition) {
@@ -17,17 +22,17 @@
                 position : tilePosition
             });
         }.bind(this));
-    };
-
-    Grid.prototype.addTile = function (options) {
+    }
+    
+    addTile(options) {
         var tile = new MOON.Tile(this.scene, options);
         tile.create();
         tile.movePosition();
         
         this.tiles[tile.id] = tile;
-    };
+    }
     
-    Grid.prototype.getTilesMesh = function () {
+    getTilesMesh() {
         if (!this.tilesMesh) {
             this.tilesMesh = [];
             
@@ -37,25 +42,23 @@
         }
         MOON.Debug.log("Tile count: " + this.tilesMesh.length);
         return this.tilesMesh;
-    };
+    }
     
-    
-    
-    Grid.prototype.getTile = function (gPosition) {
+    getTile(gPosition) {
         var tile = this.tiles[gPosition.toKey()];
         
         MOON.Debug.log(tile);
         return tile;
-    };
+    }
     
-    Grid.prototype.convertGridToPosition = function(pos) {
+    convertGridToPosition(pos) {
         var gPosition = null,
             tile = this.getTile(pos),
             position = tile.getPosition();
         return position;
-    };
+    }
     
-    Grid.prototype.convertPositionToGrid = function(position) {
+    convertPositionToGrid(position) {
         var gPosition = null,
             tile = this.getTile(new MOON.GridPosition(0, 0)),
             tHeight = tile.getHeight(),
@@ -65,9 +68,9 @@
                                     Math.trunc(position.z / tHeight));
         
         return gPosition;
-    };
+    }
     
-    Grid.prototype.getNeighbours = function(tile, options) {
+    getNeighbours(tile, options) {
         if (!options) {
             options = {};
         }
@@ -90,9 +93,9 @@
         MOON.Debug.log("neighbours " + position.toString());
         MOON.Debug.log("neighbours " + neighbours.length);
         return neighbours;
-    };
+    }
     
-    Grid.prototype.generateNeighbourPositions = function(originPosition, maxDistance, minDistance) {
+    generateNeighbourPositions(originPosition, maxDistance, minDistance) {
         var neighbourMatrix = MOON.HexaMatrix.generate(maxDistance, {
             excludeCenter : true
         });
@@ -105,7 +108,7 @@
         MOON.HexaMatrix.shift(originPosition, neighbourMatrix);
                
         return neighbourMatrix;
-    };
-    
-    MOON.Grid = Grid;
-}());
+    }
+};
+
+MOON.Grid = Grid;
