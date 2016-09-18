@@ -1,4 +1,4 @@
-cd /home/brunon/Documents/Sylvain/Projet_jeu/Moon_Game/moon/moonThreeJS
+cd /home/brunon/Documents/Sylvain/Projet_jeu/Mokoon
 echo "{}" > package.json 
 
 // Install grunt
