@@ -41,15 +41,17 @@ var HexaMatrix = class {
     }
     
     static intersect(mainMatrix, minMatrix) {
+        var deleteCell = function(minPos) {
+            if (pos.row === minPos.row && 
+                pos.column === minPos.column) {
+                mainMatrix.splice(i, 1);
+                return i--;
+            }
+        };
+        
         for (var i = 0; i < mainMatrix.length; i++) {
             var pos = mainMatrix[i];
-            minMatrix.some(function(minPos) {
-                if (pos.row === minPos.row && 
-                    pos.column === minPos.column) {
-                    mainMatrix.splice(i, 1);
-                    return i--;
-                }
-            });
+            minMatrix.some(deleteCell);
         }
         
         return mainMatrix;
