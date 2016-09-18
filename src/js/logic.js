@@ -1,3 +1,4 @@
+/* global MOON, THREE*/
 MOON.Debug.mode(true);
 
 
@@ -79,7 +80,7 @@ function initGui() {
 	// camera angle
 	var minAngle = 0;
 	var maxAngle = 90;
-	var angleController = gui.add(guiControls, 'cameraAngle', minAngle, maxAngle)
+	var angleController = gui.add(guiControls, 'cameraAngle', minAngle, maxAngle);
 	angleController.onChange(function(value) {
 	
 		camera.rotation.x = degreesToRadians(-value);
@@ -496,7 +497,7 @@ function drawPath() {
 
   // Change 2D points to 3D points
   for (var i = 0; i < vertices.length; i++) {
-    point = vertices[i]
+    point = vertices[i];
     vertices[i] = new THREE.Vector3(point.x, point.y, 0);
   }
   var lineGeometry = new THREE.Geometry();
@@ -504,7 +505,7 @@ function drawPath() {
   var lineMaterial = new THREE.LineBasicMaterial({
     color: 0xffffff
   });
-  var line = new THREE.Line(lineGeometry, lineMaterial)
+  var line = new THREE.Line(lineGeometry, lineMaterial);
   scene.add(line);
 }
 
