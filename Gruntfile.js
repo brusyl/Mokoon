@@ -1,34 +1,41 @@
-module.exports = function(grunt) {
+/* global module*/
 
-  grunt.initConfig({
-    jshint: {
-      files: ['Gruntfile.js', 'src/js/*.js', 'test/**/*.js'],
-      options: {
-        globals: {
-          jQuery: true
-        }
-      }
-     },
-        
-        jsdoc : {
-        dist : {
-            src: ['<%= jshint.files %>'],
+module.exports = function (grunt) {
+
+    grunt.initConfig({
+        jshint: {
+            files: ['Gruntfile.js', 'src/js/*.js', 'test/**/*.js'],
             options: {
-                destination: 'doc'
+                globals: {
+                    jQuery: true
+                }
+            }
+        },
+
+        jsdoc: {
+            dist: {
+                src: ['<%= jshint.files %>'],
+                options: {
+                    destination: 'doc'
+                }
+            }
+        },
+
+        babel: {
+            options: {
+                sourceMap: true
+            },
+            dist: {
+                files: {
+                    "dist/app.js": "src/js/*.js"
+                }
             }
         }
-    }
-    /*},
-    watch: {
-      files: ['<%= jshint.files %>'],
-      tasks: ['jshint']*/
-    //}
-  });
+    });
 
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-jsdoc');  
-  //grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-jsdoc');
+    grunt.loadNpmTasks('grunt-babel');
 
-  grunt.registerTask('default', ['jshint','jsdoc']);
-
+    grunt.registerTask('default', ['jshint', 'babel', 'jsdoc']);
 };
