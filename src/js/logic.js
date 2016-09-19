@@ -154,11 +154,11 @@ function initSampleSceneGeometry() {
 	
 	var geometry = new THREE.PlaneGeometry( 50, 50, 50, 50 );
 	var material = new THREE.MeshBasicMaterial( {color: 0xffff00, wireframe: true} );
-	var plane = new THREE.Mesh( geometry, material );
-	plane.rotation.x = degreesToRadians(-90); // initially the plane is in the XY-plane
-	scene.add( plane );
+	//var plane = new THREE.Mesh( geometry, material );
+	//plane.rotation.x = degreesToRadians(-90); // initially the plane is in the XY-plane
+	//scene.add( plane );
 	
-	planes.push(plane);
+	//planes.push(plane);
 	
 	//var geometry = new THREE.BoxGeometry( 1, 1, 1 );
 	//var material = new THREE.MeshBasicMaterial( {color: 0x00ff00, wireframe: true} );
@@ -177,11 +177,11 @@ function initSampleSceneGeometry() {
     var character = new MOON.Character();
     character.create(grid, selectable);
     
-    var character2 = new MOON.Character({
+    /*var character2 = new MOON.Character({
         gridPosition : new GridPosition(2, 2)
     });
     character2.create(grid, selectable);
-    
+    */
     /*var tile = new MOON.Tile();
     tile.create(scene);
 	
