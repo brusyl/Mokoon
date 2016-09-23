@@ -20,24 +20,24 @@ function rtsCameraControl(camera, options) {
 	
 }
 
-function checkMapBounds() {
+function checkMapBounds(camera) {
 		
 	// camera movement bounds
 	var halfMapSide = 50; // current sample plane size is 1000x1000, this would place the bounds a bit to the inside
-	if (this.camera.position.x < -halfMapSide) {
-		this.camera.position.x = -halfMapSide;
+	if (camera.position.x < -halfMapSide) {
+		camera.position.x = -halfMapSide;
 	}
-	if (this.camera.position.x > halfMapSide) {
-		this.camera.position.x = halfMapSide;
+	if (camera.position.x > halfMapSide) {
+		camera.position.x = halfMapSide;
 	}
 	
 	// z offset is the distance from the projection of the camera position to the looking point
-	var zOffset = this.camera.position.y / Math.tan(this.camera.rotation.x);
-	if (this.camera.position.z + zOffset < -halfMapSide) {
-		this.camera.position.z = -halfMapSide - zOffset;
+	var zOffset = camera.position.y / Math.tan(camera.rotation.x);
+	if (camera.position.z + zOffset < -halfMapSide) {
+		camera.position.z = -halfMapSide - zOffset;
 	}
-	if (this.camera.position.z + zOffset > halfMapSide) {
-		this.camera.position.z = halfMapSide - zOffset;
+	if (camera.position.z + zOffset > halfMapSide) {
+		camera.position.z = halfMapSide - zOffset;
 	}
 	
 }
@@ -68,7 +68,7 @@ rtsCameraControl.prototype = {
 
 			this.camera.position.add(this.mouseVector.multiplyScalar(factor));
 			
-			checkMapBounds();
+			checkMapBounds(this.camera);
 		}
 	},
 	onKeyDown: function (event) {
