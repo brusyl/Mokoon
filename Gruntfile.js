@@ -48,8 +48,8 @@ module.exports = function (grunt) {
                 dest: 'public/app.js',
             }
         },
-        
-        concat: {
+
+       /* concat: {
             options: {
                 // define a string to put between each file in the concatenated output
                 separator: ';'
@@ -69,6 +69,13 @@ module.exports = function (grunt) {
                 // the location of the resulting JS file
                 dest: 'dist/<%= pkg.name %>.js'
             }
+        },*/
+
+        watch: {
+            scripts: {
+                files: '**/*.es6',
+                tasks: ['default']
+            }
         },
 
         clean: ['build', 'dist']
@@ -76,14 +83,24 @@ module.exports = function (grunt) {
 
     grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-concat');
+    //grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-jsdoc');
     grunt.loadNpmTasks('grunt-babel');
 
-    grunt.registerTask('default', ['jshint', 'clean',
-                                   'babel',
-                                   'browserify',
-                                   'concat',
-                                   'jsdoc']);
+    grunt.registerTask('default', ['common',
+                                   'watch'
+                                  ]);
+
+    grunt.registerTask('dist', ['jshint',
+                                'clean',
+                                'common',
+                                'jsdoc']);
+    
+     grunt.registerTask('common', ['babel',
+                                   'browserify'
+                                  // ,
+                                   //'concat'
+                                  ]);
 };
