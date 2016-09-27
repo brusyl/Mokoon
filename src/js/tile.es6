@@ -88,6 +88,11 @@ var Tile = class {
         Debug.log("Tile position (ROW : " + this.mesh.position.z +
                        ", COLUMN : " + this.mesh.position.x + ") " +
                       this.position.toKey());
+        
+    }
+    
+    getId() {
+        return this.id;
     }
     
     getCenter() {
@@ -114,11 +119,8 @@ var Tile = class {
         return result;
     }
     
-    distance(targetTile) {
-        var pos = this.position,
-            result = new GridPosition(pos.row, pos.column, pos.height);
-        
-        return result;
+    distanceTo(targetTile) {
+        return this.mesh.position.distanceTo(targetTile.mesh.position);
     }
 };
 

@@ -1,4 +1,5 @@
 // jshint esversion:6
+/* global window*/
 
 import * as THREE from "three";
 import * as io from "socket.io-client";
@@ -352,20 +353,20 @@ function onDocumentMouseDown( event ) {
             var spline = null;
             if (INTERSECTED.character) {
                 var character = INTERSECTED.character;
-                var moveTo = character.moveTo(gPosition);
+                spline = character.moveTo(gPosition);
                 
-                spline = new THREE.CatmullRomCurve3([
-			    INTERSECTED.position,
-			    moveTo]);
+                //spline = new THREE.CatmullRomCurve3([
+			    //INTERSECTED.position,
+			    //moveTo]);
             }
             
             
-            var cPosition = grid.convertGridToPosition(gPosition);
-            var test = new THREE.Vector3(cPosition.x,1,cPosition.z);
+            //var cPosition = grid.convertGridToPosition(gPosition);
+            //var test = new THREE.Vector3(cPosition.x,1,cPosition.z);
             
-            spline = new THREE.CatmullRomCurve3([
-			    INTERSECTED.position,
-			    test]);
+            //spline = new THREE.CatmullRomCurve3([
+			  //  INTERSECTED.position,
+			    //test]);
             
             
                 distance = spline.getLength();

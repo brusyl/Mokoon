@@ -63,14 +63,14 @@ var Character = class {
             targetTile = grid.getTile(targetGridPosition),
             originTile = grid.getTile(this.gridPosition),
             position = grid.convertGridToPosition(targetGridPosition),
-            pathFinding = new MOON.PathFinding(grid);
+            pathFinding = new PathFinding(grid);
         
         this.gridPosition = targetGridPosition;
         
         var path = pathFinding.findPath(originTile, targetTile);
         Debug.log("moveTo", position);
         // TODO : gerer le deplacement du personnage ici !
-        return position;
+        return path;
     }
 };
 

@@ -1,5 +1,9 @@
 // jshint esversion:6
 
+import Debug from "./debug";
+
+import * as THREE from "three";
+
 /**
  * Class representing a dot.
  * @extends Point
@@ -16,14 +20,46 @@ var PathFinding = class {
     }
 
     findPath(originTile, targetTile) {
-        var neighbours = this.grid.getNeighbours(originTile);
-        // TODO retrouve le meilleur voisin avec la distance entre les 2 
-        // tuiles puis à partir de cette nouvelle tuile faire de meme
-        // puis faire cette opération jusqu'a obtenir le chemin complet.
+        var path = [originTile],
+            lastStep = originTile,
+            maxStep = 10;
         
-        // TODO transformer ce resultat en spline pour deplacer le personnage
+        while (lastStep.getId() !== targetTile.getId() && maxStep > path.length) {
+            lastStep = this.findClosestTile(lastStep, targetTile);
+            path.push(lastStep);
+        }
+        
+        Debug.log("Count step : " + path.length);
+        
+        var points = [];
+        path.forEach(function(tile) {
+            points.push(tile.mesh.position);
+        });
+        return new THREE.CatmullRomCurve3(points);
+
+        // TODO Ajouter tuiles blocantes
+		// TODO Ameliorer algo
     }
-    
+
+    findClosestTile(originTile, targetTile) {
+        var neighbours = this.grid.getNeighbours(originTile),
+            closestTile;
+        
+        this.sortNeighbours(neighbours, targetTile);
+        closestTile = neighbours[0];
+        
+        return closestTile;
+    }
+
+    sortNeighbours(tiles, targetTile) {
+        var nombres = [4, 2, 5, 1, 3];
+        tiles.sort(function (tileA, tileB) {
+            var distanceA = tileA.distanceTo(targetTile),
+                distanceB = tileB.distanceTo(targetTile);
+            return distanceA - distanceB;
+        });
+    }
+
 };
 
 export default PathFinding;
