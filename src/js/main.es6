@@ -440,6 +440,7 @@ function animate(time) {
         if (counter < (points.length - 1)) {
             INTERSECTED.position.copy(points[counter]);
             INTERSECTED.lookAt(points[counter + 1]);
+			INTERSECTED.character.updateGridPosition();
             counter++;
         } else {
             scene.remove(line);

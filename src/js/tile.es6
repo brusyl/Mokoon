@@ -32,6 +32,8 @@ var Tile = class {
             }),
             cylinder = new THREE.Mesh(geometry, material);
         
+		cylinder.geometry.computeBoundingBox();
+		
         this.scene.add(cylinder);
         
         cylinder.tile = this;
@@ -40,35 +42,15 @@ var Tile = class {
     }
     
     getWidth() {
-        var vertices = this.mesh.geometry.vertices,
-            xMin = 0,
-            xMax = 0;
+		var bBox = this.mesh.geometry.boundingBox;
         
-        vertices.forEach(function (vertice) {
-            if (xMin > vertice.x) {
-                xMin = vertice.x;
-            } else if (xMax < vertice.x) {
-                xMax = vertice.x;
-            }
-        });
-        
-        return xMax - xMin;
+        return bBox.max.x - bBox.min.x;
     }
     
     getHeight() {
-        var vertices = this.mesh.geometry.vertices,
-            zMin = 0,
-            zMax = 0;
+		var bBox = this.mesh.geometry.boundingBox;
         
-        vertices.forEach(function (vertice) {
-            if (zMin > vertice.z) {
-                zMin = vertice.z;
-            } else if (zMax < vertice.z) {
-                zMax = vertice.z;
-            }
-        });
-        
-        return zMax - zMin;
+        return bBox.max.z - bBox.min.z;
     }
     
     movePosition() {

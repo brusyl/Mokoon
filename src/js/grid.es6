@@ -55,6 +55,11 @@ var Grid = class {
         Debug.log(tile);
         return tile;
     }
+	
+	updateTileColor(gridPosition, color) {
+		var tile = this.getTile(gridPosition);
+		tile.mesh.material.color.setHex(color);
+	}
     
     convertGridToPosition(pos) {
         var gPosition = null,
@@ -69,10 +74,21 @@ var Grid = class {
             tHeight = tile.getHeight(),
             tWidth = tile.getWidth();
         
-        gPosition = new GridPosition(Math.trunc(position.x / tWidth), 
-                                    Math.trunc(position.z / tHeight));
+		for(var key in this.tiles) {
+			var t = this.tiles[key];
+			if (t.mesh.geometry.boundingBox.containsPoint(position)) {
+				tile = t;
+				break;
+			}
+		} 
+		
+       // gPosition = new GridPosition(Math.trunc(position.z / tWidth), 
+       //                             Math.trunc(position.x / tHeight));
+		
+        //return gPosition;
+		
+		return tile.getGridPosition();
         
-        return gPosition;
     }
     
     getNeighbours(tile, options) {
