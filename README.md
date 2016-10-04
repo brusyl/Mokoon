@@ -17,9 +17,12 @@ The code is writted in JS ES6.
 Install nodejs.
 
 In the terminal go to your project and execute the next scripts:
+
 ```
-npm install three
+npm install
+npm install socket.io-client
 ```
+
 ```
 grunt
 ```
