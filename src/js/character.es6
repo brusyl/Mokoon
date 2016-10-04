@@ -90,18 +90,20 @@ var Character = class {
 	updateGridPosition() {
 		var position = this.getGridPosition();
 
+        //this.collision();
 		if (position.toKey() !== this.gridPosition.toKey()) {
 			this.gridPosition = position;
 			this.grid.updateTileColor(this.gridPosition, 0x0000ff);
 
+            
 			Debug.log("updateGridPosition", position);
 		}
 	}
 
 	getGridPosition() {
 		var mesh = this.mesh,
-			vector = new THREE.Vector3(mesh.position.x, 0, mesh.position.z),
-			position = this.grid.convertPositionToGrid(vector);
+			//vector = new THREE.Vector3(mesh.position.x, 0, mesh.position.z),
+			position = this.grid.convertPositionToGrid(this.mesh.position);
 
 		return position;
 	}
@@ -110,31 +112,40 @@ var Character = class {
 	collision() {
 
 		var collisions, i,
-			// Maximum distance from the origin before we consider collision
-			distance = 32,
 			// Get the obstacles array from our world
-			obstacles = basicScene.world.getObstacles();
+			//obstacles = this.grid.getTilesMesh(),
+            tiles = this.grid.getTiles();
+        
+        var firstBB = new THREE.Box3().setFromObject(this.mesh);
+
+        // For each ray
+        for (var key in tiles) {
+            var tile = tiles[key];
+            
+            var secondBB = new THREE.Box3().setFromObject(tile.mesh);
+            var collision = firstBB.isIntersectionBox(secondBB);
+            if (collision) {
+                this.grid.updateTileColor(tile.getGridPosition(), 0x0000ff);
+                console.log("collision");
+                break;
+            }
+        }
+		
+
+        
+        
 		// For each ray
-		for (i = 0; i < this.rays.length; i += 1) {
+		/*for (i = 0; i < this.rays.length; i += 1) {
 			// We reset the raycaster to this direction
-			this.caster.set(this.mesh.position, this.rays[i]);
+			this.raycaster.set(this.mesh.position, this.rays[i]);
 			// Test if we intersect with any obstacle mesh
-			collisions = this.caster.intersectObjects(obstacles);
+			collisions = this.raycaster.intersectObjects(obstacles);
 			// And disable that direction if we do
-			if (collisions.length > 0 && collisions[0].distance <= distance) {
-				// Yep, this.rays[i] gives us : 0 => up, 1 => up-left, 2 => left, ...
-				if ((i === 0 || i === 1 || i === 7) && this.direction.z === 1) {
-					this.direction.setZ(0);
-				} else if ((i === 3 || i === 4 || i === 5) && this.direction.z === -1) {
-					this.direction.setZ(0);
-				}
-				if ((i === 1 || i === 2 || i === 3) && this.direction.x === 1) {
-					this.direction.setX(0);
-				} else if ((i === 5 || i === 6 || i === 7) && this.direction.x === -1) {
-					this.direction.setX(0);
-				}
+			if (collisions.length > 0) {
+                console.log(collisions[0]);
+				
 			}
-		}
+		}*/
 	}
 };
 

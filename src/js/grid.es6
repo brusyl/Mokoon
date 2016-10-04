@@ -37,6 +37,10 @@ var Grid = class {
         this.tiles[tile.id] = tile;
     }
     
+    getTiles() {
+        return this.tiles;
+    }
+    
     getTilesMesh() {
         if (!this.tilesMesh) {
             this.tilesMesh = [];
@@ -58,7 +62,13 @@ var Grid = class {
 	
 	updateTileColor(gridPosition, color) {
 		var tile = this.getTile(gridPosition);
-		tile.mesh.material.color.setHex(color);
+        if (tile) {
+            tile.mesh.material.color.setHex(color);
+        } else {
+            console.log("undefined");
+        }
+		
+		
 	}
     
     convertGridToPosition(pos) {
@@ -74,20 +84,25 @@ var Grid = class {
             tHeight = tile.getHeight(),
             tWidth = tile.getWidth();
         
-		for(var key in this.tiles) {
+		/*for(var key in this.tiles) {
 			var t = this.tiles[key];
 			if (t.mesh.geometry.boundingBox.containsPoint(position)) {
 				tile = t;
 				break;
 			}
-		} 
+		} */
+		var row = Math.round(position.z);
+        var column = Math.round(position.x / tWidth);
+        if (row % 2 === 1) {
+        column-= 1;
+        }
+        
+       gPosition = new GridPosition(row, 
+                                   column);
 		
-       // gPosition = new GridPosition(Math.trunc(position.z / tWidth), 
-       //                             Math.trunc(position.x / tHeight));
+        return gPosition;
 		
-        //return gPosition;
-		
-		return tile.getGridPosition();
+		//return tile.getGridPosition();
         
     }
     
