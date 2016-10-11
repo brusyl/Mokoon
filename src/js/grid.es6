@@ -78,33 +78,42 @@ var Grid = class {
         return position;
     }
     
-    convertPositionToGrid(position) {
+    /*convertPositionToGrid(position) {
         var gPosition = null,
             tile = this.getTile(new GridPosition(0, 0)),
             tHeight = tile.getHeight(),
             tWidth = tile.getWidth();
+        var tile2 = this.getTile(new GridPosition(1, 0))
+		
+        var heightRadius = tHeight / 2;
+        var heightRaw = position.z + (tHeight / 2);
         
-		/*for(var key in this.tiles) {
-			var t = this.tiles[key];
-			if (t.mesh.geometry.boundingBox.containsPoint(position)) {
-				tile = t;
-				break;
-			}
-		} */
-		var row = Math.round(position.z);
-        var column = Math.round(position.x / tWidth);
-        if (row % 2 === 1) {
-        column-= 1;
+        if (heightRaw > heightRadius) {
+            heightRaw += (tHeight / 2);
+        } else if (heightRaw < -heightRadius) {
+            heightRaw -= (tHeight / 2);
         }
         
+        var row = Math.round(heightRaw);
+        
+        var widthRadius = tWidth / 2;
+        var widthRaw = position.x;
+        
+        if (widthRaw > widthRadius) {
+            widthRaw += widthRadius;
+        } else if (widthRaw < -widthRadius) {
+            widthRaw -= widthRadius;
+        }
+        
+        var column=Math.round(widthRaw);
+		
        gPosition = new GridPosition(row, 
                                    column);
 		
         return gPosition;
-		
-		//return tile.getGridPosition();
+
         
-    }
+    }*/
     
     getNeighbours(tile, options) {
         if (!options) {

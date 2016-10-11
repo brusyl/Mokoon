@@ -23,18 +23,10 @@ var Character = class {
 		this.grid = null;
 
 		// Set the rays : one vector for every potential direction
-		this.rays = [
-		  new THREE.Vector3(0, 0, 1),
-		  new THREE.Vector3(1, 0, 1),
-		  new THREE.Vector3(1, 0, 0),
-		  new THREE.Vector3(1, 0, -1),
-		  new THREE.Vector3(0, 0, -1),
-		  new THREE.Vector3(-1, 0, -1),
-		  new THREE.Vector3(-1, 0, 0),
-		  new THREE.Vector3(-1, 0, 1)
-		];
+        this.ray = new THREE.Vector3(0, -1, 0);
+		
 		// And the "RayCaster", able to test for intersections
-		this.raycaster = new THREE.Raycaster();
+		this.raycaster = new THREE.Raycaster(undefined, undefined, 0, 1);
 	}
 
 	create(grid, selectable) {
@@ -88,64 +80,40 @@ var Character = class {
 	}
 
 	updateGridPosition() {
-		var position = this.getGridPosition();
+		//var position = this.getGridPosition();
 
-        //this.collision();
-		if (position.toKey() !== this.gridPosition.toKey()) {
-			this.gridPosition = position;
-			this.grid.updateTileColor(this.gridPosition, 0x0000ff);
-
-            
-			Debug.log("updateGridPosition", position);
-		}
+        this.collision();
 	}
 
-	getGridPosition() {
+	/*getGridPosition() {
 		var mesh = this.mesh,
 			//vector = new THREE.Vector3(mesh.position.x, 0, mesh.position.z),
 			position = this.grid.convertPositionToGrid(this.mesh.position);
 
 		return position;
-	}
+	}*/
 
 	// Test and avoid collisions
 	collision() {
 
-		var collisions, i,
+		var collisions,
 			// Get the obstacles array from our world
-			//obstacles = this.grid.getTilesMesh(),
-            tiles = this.grid.getTiles();
-        
-        var firstBB = new THREE.Box3().setFromObject(this.mesh);
-
-        // For each ray
-        for (var key in tiles) {
-            var tile = tiles[key];
+			obstacles = this.grid.getTilesMesh();
             
-            var secondBB = new THREE.Box3().setFromObject(tile.mesh);
-            var collision = firstBB.isIntersectionBox(secondBB);
-            if (collision) {
-                this.grid.updateTileColor(tile.getGridPosition(), 0x0000ff);
-                console.log("collision");
-                break;
-            }
-        }
 		
+        // We reset the raycaster to this direction
+        this.raycaster.set(this.mesh.position, this.ray);
+        // Test if we intersect with any obstacle mesh
+        collisions = this.raycaster.intersectObjects(obstacles);
+        // And disable that direction if we do
+        if (collisions.length > 0) {
+            var id = collisions[0].object.tile.id;
+            var split = id.split(",");
+            this.grid.updateTileColor(new GridPosition(split[0],split[1]), 0x0000ff);
 
-        
-        
-		// For each ray
-		/*for (i = 0; i < this.rays.length; i += 1) {
-			// We reset the raycaster to this direction
-			this.raycaster.set(this.mesh.position, this.rays[i]);
-			// Test if we intersect with any obstacle mesh
-			collisions = this.raycaster.intersectObjects(obstacles);
-			// And disable that direction if we do
-			if (collisions.length > 0) {
-                console.log(collisions[0]);
-				
-			}
-		}*/
+            Debug.log("collision " + id);
+        }
+
 	}
 };
 
