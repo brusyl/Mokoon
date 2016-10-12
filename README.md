@@ -20,6 +20,7 @@ In the terminal go to your project and execute the next scripts:
 
 ```
 npm install
+npm install -g grunt-cli
 npm install socket.io-client
 ```
 
