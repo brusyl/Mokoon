@@ -58,27 +58,56 @@ var PathFinding = class {
         var closest = neighbours[0],
             i = 1,
             result = [closest];
-        while (closest.distance === neighbours[i].distance) {
+        while (!neighbours[i] || 
+               closest.distance >= neighbours[i].distance - 0.2) {
             result.push(neighbours[i]);
             i++;
         }
         
         // Improve pathfinder
-        if (result.length === 2) {
+        if (result.length > 1) {
+            var nextClosestNeighbours = [];
+            result.forEach(function(n) {
+                var next = this.grid.getNeighbours(n.tile);
+                var nextNeighbours = [];
+                next.forEach(function(nn) {
+                    nextNeighbours.push({
+                        tile : nn,
+                        distance : nn.distanceTo(targetTile),
+                        originNeighbour : n
+                    });
+                });
+                
+                this.sortNeighbours2(nextNeighbours, targetTile);
+                
+                
+                nextClosestNeighbours.push(nextNeighbours[0]);
+            }.bind(this));
+            
+            this.sortNeighbours2(nextClosestNeighbours, targetTile);
+            closestTile = nextClosestNeighbours[0].originNeighbour.tile;
+            /*
             var listNext = this.grid.getNeighbours(result[0].tile);
             var listNext2 = this.grid.getNeighbours(result[1].tile);
             this.sortNeighbours(listNext, targetTile);
             this.sortNeighbours(listNext2, targetTile);
             var closestNextTile = listNext[0];
             var closestNextTile2 = listNext2[0];
-            closestNextTile.distanceTo(targetTile);
-            closestNextTile2.distanceTo(targetTile);
+            var d1 = closestNextTile.distanceTo(targetTile);
+            var d2 = closestNextTile2.distanceTo(targetTile);
+            if (d1 < d2) {
+                closestTile = result[0].tile;
+            } else {
+                closestTile = result[1].tile; 
+            }*/
+        } else {
+            closestTile = result[0].tile;
         }
         
         
         
-        this.sortNeighbours(tileNeighbours, targetTile);
-        closestTile = tileNeighbours[0];
+        /*this.sortNeighbours(tileNeighbours, targetTile);
+        closestTile = tileNeighbours[0];*/
         
         return closestTile;
     }
