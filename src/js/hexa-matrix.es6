@@ -62,6 +62,10 @@ var HexaMatrix = class {
         matrix.forEach(function(cell) {
             cell.row += shiftPosition.row;
             cell.column += shiftPosition.column;
+            
+            if (shiftPosition.row % 2 !== 0) {
+                cell.column += 1;
+            }
         });
         
         return matrix;
