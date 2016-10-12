@@ -42,20 +42,59 @@ var PathFinding = class {
     }
 
     findClosestTile(originTile, targetTile) {
-        var neighbours = this.grid.getNeighbours(originTile),
-            closestTile;
+        var tileNeighbours = this.grid.getNeighbours(originTile),
+            closestTile,
+            neighbours = [];
         
-        this.sortNeighbours(neighbours, targetTile);
-        closestTile = neighbours[0];
+        tileNeighbours.forEach(function(tileNeighbour) {
+            neighbours.push({
+                tile : tileNeighbour,
+                distance : tileNeighbour.distanceTo(targetTile)
+            });
+        });
+        
+        this.sortNeighbours2(neighbours);
+        
+        var closest = neighbours[0],
+            i = 1,
+            result = [closest];
+        while (closest.distance === neighbours[i].distance) {
+            result.push(neighbours[i]);
+            i++;
+        }
+        
+        // Improve pathfinder
+        if (result.length === 2) {
+            var listNext = this.grid.getNeighbours(result[0].tile);
+            var listNext2 = this.grid.getNeighbours(result[1].tile);
+            this.sortNeighbours(listNext, targetTile);
+            this.sortNeighbours(listNext2, targetTile);
+            var closestNextTile = listNext[0];
+            var closestNextTile2 = listNext2[0];
+            closestNextTile.distanceTo(targetTile);
+            closestNextTile2.distanceTo(targetTile);
+        }
+        
+        
+        
+        this.sortNeighbours(tileNeighbours, targetTile);
+        closestTile = tileNeighbours[0];
         
         return closestTile;
     }
 
     sortNeighbours(tiles, targetTile) {
-        var nombres = [4, 2, 5, 1, 3];
         tiles.sort(function (tileA, tileB) {
             var distanceA = tileA.distanceTo(targetTile),
                 distanceB = tileB.distanceTo(targetTile);
+            return distanceA - distanceB;
+        });
+    }
+        
+    sortNeighbours2(neighbours) {
+        neighbours.sort(function (neighbourA, neighbourB) {
+            var distanceA = neighbourA.distance,
+                distanceB = neighbourB.distance;
             return distanceA - distanceB;
         });
     }
