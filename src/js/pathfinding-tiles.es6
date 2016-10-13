@@ -44,20 +44,24 @@ var PathTiles = class {
     }
     
     closest(level, errorMargin) {
-        var closest, result,
-            i = 1;
+        var closest, 
+            result = [],
+            i = 0;
         
+        // Initialize default value
         errorMargin = errorMargin ? errorMargin : 0.2;
-        
         level = level ? level : 1;
         
+        // Sort the tiles by distance
         this.sort();
         
-        closest = this.list[0];
-        result = [closest];
-        
-        while (!this.list[i] || 
+        // Add the closest tiles
+        while (i === 0 ||
+               !this.list[i] || 
                closest.distance >= this.list[i].distance - errorMargin) {
+            if (i === 0) {
+                closest = this.list[i];
+            }
             result.push(this.list[i]);
             i++;
         }
@@ -69,11 +73,9 @@ var PathTiles = class {
                 var next = this.grid.getNeighbours(n.tile);
                 var nextPathTiles = new PathTiles(this.grid);
                 nextPathTiles.addAll(next, n.targetTile, n);
-               
-                
+
                 var nextClosest = nextPathTiles.closest(level + 1);
                 nextClosestPathTiles.add(nextClosest);
-    
             }.bind(this));
             
             nextClosestPathTiles.sort();
