@@ -63,10 +63,10 @@ var HexaMatrix = class {
             cell.row += shiftPosition.row;
             cell.column += shiftPosition.column;
             
-            if (shiftPosition.row % 2 !== 0) {
+            if (!this.isOdd(shiftPosition.row)) {
                 cell.column += 1;
             }
-        });
+        }.bind(this));
         
         return matrix;
     }

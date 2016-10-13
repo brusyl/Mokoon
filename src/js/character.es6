@@ -85,14 +85,6 @@ var Character = class {
         this.collision();
 	}
 
-	/*getGridPosition() {
-		var mesh = this.mesh,
-			//vector = new THREE.Vector3(mesh.position.x, 0, mesh.position.z),
-			position = this.grid.convertPositionToGrid(this.mesh.position);
-
-		return position;
-	}*/
-
 	// Test and avoid collisions
 	collision() {
 
