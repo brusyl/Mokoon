@@ -5,6 +5,7 @@ import * as THREE from "three";
 import Debug from "./debug";
 import PathFinding from "./pathfinding";
 import GridPosition from "./grid-position";
+import Team from "./team";
 
 var Character = class {
 	/**
@@ -27,6 +28,9 @@ var Character = class {
 		
 		// And the "RayCaster", able to test for intersections
 		this.raycaster = new THREE.Raycaster(undefined, undefined, 0, 1);
+        
+        // Define team
+        this.team = new Team(0);
 	}
 
 	create(grid, selectable) {
@@ -101,7 +105,7 @@ var Character = class {
         if (collisions.length > 0) {
             var id = collisions[0].object.tile.id;
             var split = id.split(",");
-            this.grid.updateTileColor(new GridPosition(split[0],split[1]), 0x0000ff);
+            this.grid.updateTileColor(new GridPosition(split[0],split[1]), this.team.getColor());
 
             Debug.log("collision " + id);
         }
