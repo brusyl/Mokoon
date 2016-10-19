@@ -13,13 +13,17 @@ var Team = class {
 	 * @param {number} width - The width of the dot, in pixels.
 	 */
 	constructor(teamNumber) {
+        this.id = teamNumber;
         this.color = Team.COLOR[teamNumber];
 	}
     
     getColor() {
         return this.color.getHex();
     }
-
+    
+    getTeamNumber() {
+        return this.id;
+    }
 };
 
 

@@ -189,7 +189,9 @@ function initSampleSceneGeometry() {
     grid = new Grid(scene);
     grid.create();
     
-    var character = new Character();
+    var character = new Character({
+        team: 1
+    });
     character.create(grid, selectable);
     
     /*var character2 = new Character({

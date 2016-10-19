@@ -15,10 +15,19 @@ var Character = class {
 	 * @param {number} width - The width of the dot, in pixels.
 	 */
 	constructor(options) {
+        var settings = options ? options : {};
+        
 		this.gridPosition = new GridPosition(0, 0);
-		if (options && options.gridPosition) {
-			this.gridPosition = options.gridPosition;
+		if (settings.gridPosition) {
+            this.gridPosition = options.gridPosition;
 		}
+        
+        // Define team
+        if (settings.team) {
+            this.team = new Team(settings.team);
+        } else {
+            this.team = new Team(0);
+        }
 
 		this.mesh = null;
 		this.grid = null;
@@ -28,15 +37,12 @@ var Character = class {
 		
 		// And the "RayCaster", able to test for intersections
 		this.raycaster = new THREE.Raycaster(undefined, undefined, 0, 1);
-        
-        // Define team
-        this.team = new Team(0);
 	}
 
 	create(grid, selectable) {
 		var geometry = new THREE.BoxGeometry(1, 1, 1),
 			material = new THREE.MeshBasicMaterial({
-				color: 0xff00ff,
+				color: this.team.getColor(),
 				wireframe: true
 			}),
 			scene = grid.scene,
@@ -105,7 +111,7 @@ var Character = class {
         if (collisions.length > 0) {
             var id = collisions[0].object.tile.id;
             var split = id.split(",");
-            this.grid.updateTileColor(new GridPosition(split[0],split[1]), this.team.getColor());
+            this.grid.updateTileTeam(new GridPosition(split[0],split[1]), this.team);
 
             Debug.log("collision " + id);
         }

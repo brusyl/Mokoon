@@ -60,15 +60,13 @@ var Grid = class {
         return tile;
     }
 	
-	updateTileColor(gridPosition, color) {
+	updateTileTeam(gridPosition, team) {
 		var tile = this.getTile(gridPosition);
         if (tile) {
-            tile.mesh.material.color.setHex(color);
+            tile.updateTileTeam(team);
         } else {
             console.log("undefined");
         }
-		
-		
 	}
     
     convertGridToPosition(pos) {
