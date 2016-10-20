@@ -4,6 +4,7 @@ import * as THREE from "three";
 
 import Debug from "./debug";
 import GridPosition from "./grid-position";
+import Color from "./color";
 
 /**
  * Class representing a dot.
@@ -21,24 +22,66 @@ var Tile = class {
         this.mesh = null;
         this.position = options.position;
         this.id = this.position.toKey();
+        this.color = new Color(0,0,0);
+        this.team = null;
+        this.tileSize = 1;
     }
+    
+    _createVertex(i) {
+        var TAU = Math.PI * 2,
+            angle = (TAU / 6) * i;
+        
+        return new THREE.Vector3((this.tileSize * Math.sin(angle)), (this.tileSize * Math.cos(angle)), 0);
+	}
 
     create() {
+        var activeWireframe = false;
         var height = 0,
-            geometry = new THREE.CylinderGeometry(1, 1, height, 6),
-            material = new THREE.MeshBasicMaterial({
-                color: 0xff0000,
-                wireframe: true
-            }),
-            cylinder = new THREE.Mesh(geometry, material);
+            cGeometry = new THREE.CylinderGeometry(1, 1, height, 6),
+            material = new THREE.MeshPhongMaterial({
+                color: this.color.getHex(),
+                wireframe: activeWireframe
+            });
         
+        // create base shape used for building geometry
+        var i, verts = [];
+        // create the skeleton of the hex
+        for (i = 0; i < 6; i++) {
+            verts.push(this._createVertex(i));
+        }
+        
+        this.cellShape = new THREE.Shape();
+        this.cellShape.moveTo(verts[0].x, verts[0].y);
+        for (i = 1; i < verts.length; i++) {
+            this.cellShape.lineTo(verts[i].x, verts[i].y);
+        }
+        this.cellShape.lineTo(verts[0].x, verts[0].y);
+        this.cellShape.autoClose = true;
+                
+        var geometry = new THREE.ExtrudeGeometry(this.cellShape, {
+            amount: 0.2,
+            bevelEnabled: true,
+            bevelThickness: 0.01,
+            bevelSize: 0.1,
+            bevelSegments: 1,
+            steps: 1
+        });
+
+        geometry.rotateX(Math.PI / 2);
+        
+        var cylinder = new THREE.Mesh(geometry, material);
 		cylinder.geometry.computeBoundingBox();
+        cylinder.tile = this;
 		
         this.scene.add(cylinder);
-        
-        cylinder.tile = this;
-        
         this.mesh = cylinder;
+    }
+    
+    updateTileTeam(team) {
+        this.color = team.getColor();
+        this.team = team;
+        
+        this.mesh.material.color.setHex(this.color);
     }
     
     getWidth() {

@@ -31,6 +31,7 @@ var Character = class {
 
 		this.mesh = null;
 		this.grid = null;
+        this.groundElevation_ = 0.6;
 
 		// Set the rays : one vector for every potential direction
         this.ray = new THREE.Vector3(0, -1, 0);
@@ -50,7 +51,7 @@ var Character = class {
 
 		this.mesh = new THREE.Mesh(geometry, material);
 		this.mesh.position.x = gPosition.x;
-		this.mesh.position.y = gPosition.y;
+		this.mesh.position.y = this.groundElevation_;
 		this.mesh.position.z = gPosition.z;
 
 		scene.add(this.mesh);
@@ -84,7 +85,18 @@ var Character = class {
 		this.gridPosition = targetGridPosition;
 
 		var path = pathFinding.findPath(originTile, targetTile);
-		Debug.log("moveTo", position);
+        
+        Debug.log("moveTo", position);
+        
+        var points = [];
+        path.forEach(function(tile) {
+            var pos = tile.mesh.position.clone();
+            pos.y = this.groundElevation_;
+            points.push(pos);
+        }.bind(this));
+        return new THREE.CatmullRomCurve3(points);
+        
+		
 		// TODO : gerer le deplacement du personnage ici !
 		return path;
 	}

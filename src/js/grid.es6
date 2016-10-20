@@ -20,7 +20,7 @@ var Grid = class {
     }
     
     create() {
-        var terrain = HexaMatrix.generate(4);
+        var terrain = HexaMatrix.generate(5);
     
         terrain.forEach(function(tilePosition) {
             this.addTile({

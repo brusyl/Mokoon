@@ -32,11 +32,7 @@ var PathFinding = class {
         
         Debug.log("Count step : " + path.length);
         
-        var points = [];
-        path.forEach(function(tile) {
-            points.push(tile.mesh.position);
-        });
-        return new THREE.CatmullRomCurve3(points);
+        return path;
 
         // TODO Ajouter tuiles blocantes
     }
