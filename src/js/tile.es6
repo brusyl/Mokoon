@@ -36,9 +36,7 @@ var Tile = class {
 
     create() {
         var activeWireframe = false;
-        var height = 0,
-            cGeometry = new THREE.CylinderGeometry(1, 1, height, 6),
-            material = new THREE.MeshPhongMaterial({
+        var material = new THREE.MeshPhongMaterial({
                 color: this.color.getHex(),
                 wireframe: activeWireframe
             });

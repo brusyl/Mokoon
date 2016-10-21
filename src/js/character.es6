@@ -98,7 +98,6 @@ var Character = class {
         
 		
 		// TODO : gerer le deplacement du personnage ici !
-		return path;
 	}
 
 	updateGridPosition() {

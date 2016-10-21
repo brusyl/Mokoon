@@ -55,15 +55,6 @@ var PathFinding = class {
             return distanceA - distanceB;
         });
     }
-        
-    sortNeighbours2(neighbours) {
-        neighbours.sort(function (neighbourA, neighbourB) {
-            var distanceA = neighbourA.distance,
-                distanceB = neighbourB.distance;
-            return distanceA - distanceB;
-        });
-    }
-
 };
 
 export default PathFinding;
