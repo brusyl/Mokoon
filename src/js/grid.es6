@@ -37,6 +37,17 @@ var Grid = class {
         this.tiles[tile.id] = tile;
     }
     
+    deleteTile(gridPosition) {
+        var tile = this.getTile(gridPosition);
+        
+        if (tile) {
+            delete this.tiles[gridPosition.toKey()];
+            tile.destroy();
+        } else {
+            Debug.warn("Tile does not exist: " + gridPosition.toString());
+        }
+    }
+    
     getTiles() {
         return this.tiles;
     }
@@ -65,7 +76,7 @@ var Grid = class {
         if (tile) {
             tile.updateTileTeam(team);
         } else {
-            console.log("undefined");
+            Debug.warn("Tile does not exist: " + gridPosition.toString());
         }
 	}
     

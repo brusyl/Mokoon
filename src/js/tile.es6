@@ -67,12 +67,16 @@ var Tile = class {
 
         geometry.rotateX(Math.PI / 2);
         
-        var cylinder = new THREE.Mesh(geometry, material);
-		cylinder.geometry.computeBoundingBox();
-        cylinder.tile = this;
+        var mesh = new THREE.Mesh(geometry, material);
+		mesh.geometry.computeBoundingBox();
+        mesh.tile = this;
 		
-        this.scene.add(cylinder);
-        this.mesh = cylinder;
+        this.scene.add(mesh);
+        this.mesh = mesh;
+    }
+    
+    destroy() {
+        this.scene.remove(this.mesh);
     }
     
     updateTileTeam(team) {
