@@ -26,6 +26,12 @@ var Debug = class {
             console.log(obj);
         }
     }
+    
+    static warn(obj) {
+        if (this.mode) {
+            console.log(obj);
+        }
+    }
 };
 
 export default Debug;
