@@ -12,16 +12,16 @@ var Color = class {
 	 * @param {number} width - The width of the dot, in pixels.
 	 */
 	constructor(r, g, b) {
-        this.red = r;
-        this.green = g;
-        this.blue = b;
+        this.r = r;
+        this.g = g;
+        this.b = b;
 
         var rgbString = "rgb(" + this.toString() + ")";
 		this.threeColor = new THREE.Color(rgbString);
 	}
     
     toString() {
-        return this.red + "," + this.green + "," + this.blue;
+        return this.r + "," + this.g + "," + this.b;
     }
     
     getHex() {
