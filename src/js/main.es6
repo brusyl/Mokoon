@@ -18,7 +18,7 @@ Debug.log("0.0.1");
 window.THREE = THREE;
 //var socket = io.connect('http://localhost:3000');
 
-var camera;
+
 var scene;
 var renderer;
 var mesh;
@@ -266,7 +266,7 @@ function init() {
 	var aspectRatio = window.innerWidth / window.innerHeight;
 	var nearPlane = 10;
 	var farPlane = 500;
-	camera = new THREE.PerspectiveCamera(currentFov, aspectRatio, nearPlane, farPlane);
+	window.camera = new THREE.PerspectiveCamera(currentFov, aspectRatio, nearPlane, farPlane);
 	// raise the camera a bit & rotate toward the ground
 	currentCameraRotation = 45;
 	camera.position.y = 25;
@@ -502,7 +502,7 @@ function animate(time) {
 
 	renderer.render(scene, camera);
 	controls.update(clock.getDelta(), controllerActive);
-	guiControls.fov = camera.fov;
+	//guiControls.fov = camera.fov;
 	requestAnimationFrame(animate);
 
 }
@@ -541,7 +541,7 @@ function getAngle( position ){
 function run() {
 
 	init();
-	initGui();
+	//initGui();
 	initSampleSceneGeometry();
 	//loadCustomModels();
 	animate();

@@ -37,10 +37,10 @@ var Tile = class {
     create() {
         var activeWireframe = false;
         var material = new THREE.MeshPhongMaterial({
-                color: this.color.getHex(),
-                wireframe: activeWireframe
-            });
-        
+            color: this.color.getHex(),
+            wireframe: activeWireframe
+        });
+            
         // create base shape used for building geometry
         var i, verts = [];
         // create the skeleton of the hex
@@ -67,7 +67,10 @@ var Tile = class {
 
         geometry.rotateX(Math.PI / 2);
         
-        var mesh = new THREE.Mesh(geometry, material);
+        var buffer = new THREE.BufferGeometry();
+        buffer.fromGeometry(geometry);
+        
+        var mesh = new THREE.Mesh(buffer, material);
 		mesh.geometry.computeBoundingBox();
         mesh.tile = this;
 		
@@ -83,7 +86,10 @@ var Tile = class {
         this.color = team.getColor();
         this.team = team;
         
-        this.mesh.material.color.setHex(this.color);
+        this.shaderMaterial.uniforms.glowColor.value = team.getRawColor();
+        this.mesh.material.setValues({
+            color : this.color
+        });
     }
     
     getWidth() {
@@ -111,6 +117,23 @@ var Tile = class {
         }
 
         this.mesh.position.z = row * height * 0.75;
+        
+        
+        // TODO : ameliorer
+        
+        var shader1 = this.getShader();
+        shader1.side = THREE.FrontSide;
+        shader1.blending = THREE.AdditiveBlending;
+        shader1.transparent = true;
+        var customMaterial = new THREE.ShaderMaterial(shader1);
+         
+		
+        var glow = new THREE.Mesh(this.mesh.geometry.clone(), customMaterial.clone() );
+        glow.position.x = this.mesh.position.x;
+        glow.position.y = this.mesh.position.y;
+        glow.position.z = this.mesh.position.z;
+        glow.scale.multiplyScalar(1.1);
+        this.scene.add(glow);
 
         Debug.log("Tile position (ROW : " + this.mesh.position.z +
                        ", COLUMN : " + this.mesh.position.x + ") " +
@@ -148,6 +171,47 @@ var Tile = class {
     
     distanceTo(targetTile) {
         return this.mesh.position.distanceTo(targetTile.mesh.position);
+    }
+    
+    
+    getShader() {
+        this.shaderMaterial = {
+				        
+            uniforms : {
+                c:   { type: "f", value: 1.0 },
+			    p:   { type: "f", value: 1.4 },
+                glowColor: { type: "c", value: new THREE.Color(0xffffff) },
+                viewVector: { type: "v3", value: camera.position }
+			},
+
+            vertexShader: [
+                'uniform vec3 viewVector;',
+                'uniform float c;',
+                'uniform float p;',
+                'varying float intensity;',
+                'void main()',
+                '{',
+                    'vec3 vNormal = normalize( normalMatrix * normal );',
+                    'vec3 vNormel = normalize( normalMatrix * viewVector );',
+                    'intensity = pow( c - dot(vNormal, vNormel), p );',
+
+                    'gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );',
+                '}'
+            ].join( "\n" ),
+
+            fragmentShader: [ 	
+                'uniform vec3 glowColor;',
+                'varying float intensity;',
+                'void main()',
+                '{',
+                    'vec3 glow = glowColor * intensity;',
+                    'gl_FragColor = vec4( glow, 1.0 );',
+                '}'
+
+            ].join( "\n" )
+        };
+        
+        return this.shaderMaterial;
     }
 };
 
