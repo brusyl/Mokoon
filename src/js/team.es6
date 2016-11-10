@@ -21,6 +21,10 @@ var Team = class {
         return this.color.getHex();
     }
     
+    getRawColor() {
+        return this.color.threeColor;
+    }
+    
     getTeamNumber() {
         return this.id;
     }
